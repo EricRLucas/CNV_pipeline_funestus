@@ -1,0 +1,43 @@
+
+------------------------------------------------------------
+Sender: LSF System <lsfadmin@node-12-2-1>
+Subject: Job 23141287: </nfs/users/nfs_j/jn11/my_lustre/cnv_calls/CNV_funestus/scripts/join_CNV_output_files_vobs.sh v1.0_afun> in cluster <farm5> Done
+
+Job </nfs/users/nfs_j/jn11/my_lustre/cnv_calls/CNV_funestus/scripts/join_CNV_output_files_vobs.sh v1.0_afun> was submitted from host <farm5-head1> by user <jn11> in cluster <farm5> at Wed May 10 09:22:32 2023
+Job was executed on host(s) <node-12-2-1>, in queue <normal>, as user <jn11> in cluster <farm5> at Wed May 10 09:22:34 2023
+</nfs/users/nfs_j/jn11> was used as the home directory.
+</nfs/users/nfs_j/jn11/my_lustre/cnv_calls/CNV_funestus/launchers> was used as the working directory.
+Started at Wed May 10 09:22:34 2023
+Terminated at Wed May 10 09:22:46 2023
+Results reported at Wed May 10 09:22:46 2023
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+/nfs/users/nfs_j/jn11/my_lustre/cnv_calls/CNV_funestus/scripts/join_CNV_output_files_vobs.sh v1.0_afun
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :                                   9.96 sec.
+    Max Memory :                                 7 MB
+    Average Memory :                             7.00 MB
+    Total Requested Memory :                     1000.00 MB
+    Delta Memory :                               993.00 MB
+    Max Swap :                                   -
+    Max Processes :                              4
+    Max Threads :                                5
+    Run time :                                   16 sec.
+    Turnaround time :                            14 sec.
+
+The output (if any) is above this job summary.
+
+
+
+PS:
+
+Read file <temp.error> for stderr output of this job.
+

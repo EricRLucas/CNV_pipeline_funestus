@@ -1,0 +1,16 @@
+name: cnv37.2
+channels:
+  - defaults
+dependencies:
+  - python=3.7
+  - ipython
+  - pandas
+  - jupyter
+  - scipy
+  - scikit-allel
+  - pysam
+  - zarr
+  - hmmlearn
+  - biopython
+prefix: /nfs/users/nfs_e/el10/miniconda3/envs/cnv37
+

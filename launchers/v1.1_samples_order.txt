@@ -1,0 +1,49 @@
+# Order of launchers that were run to call CNVs in release v1.1
+
+{sampleset} represents any one of:
+1178-VO-UG-LAWNICZAK-VMF00025,
+1190-VO-GH-AMENGA-ETEGO-VMF00013,
+1190-VO-GH-AMENGA-ETEGO-VMF00047,
+1191-VO-MULTI-OLOUGHLIN-VMF00106,
+1230-VO-MULTI-AYALA-AYDI-GA-2104,
+1236-VO-TZ-OKUMU-OKFR-TZ-2008,
+1236-VO-TZ-OKUMU-VMF00248,
+1237-VO-BJ-DJOGBENOU-VMF00067,
+1244-VO-GH-YAWSON-VMF00149,
+1264-VO-CD-WATSENGA-VMF00164,
+1273-VO-ZM-MULEBA-VMF00176,
+1288-VO-UG-DONNELLY-VMF00219,
+1315-VO-NG-OMITOLA-OMOL-NG-2008,
+1326-VO-UG-KAYONDO-KAJO-UG-2203,
+AG1000G-KE, 
+AG1000G-MW,
+AG1000G-TZ, 
+small-2020-af’
+
+
+~/scripts/CNV_funestus/scripts/setup_folder_gsutil_nobams_wrapper.sh v1.1 {sampleset}
+
+~/scripts/CNV_funestus/launchers/run_coverage_and_diagnostic_reads_vobs.sh ~/personal/funestus/v1.1_{sampleset}/data/bampaths.csv 100 v1.1_{sampleset}
+
+# That runs a job array with one job per sample. Some of these jobs fail arbitrarily, either because the bam files fail to download, or because the node arbitrarily maxes out on memory (even though it gets allocated more than 10 times more memory than it needs). So after each run, we need to check how many samples failed, and then run the above command again for the failing samples. We use the following lines to do this. The first line returns a file containing the bampaths for just the failing samples, and then the second line just reruns the above command with the new bampaths file. Just replace {x} with the iteration of this check (so the first time you run this, set {x} to 1. Then when after you have rerun the failed samples, check again for failed samples, setting {x} to 2, etc...
+
+R --slave -f ~/scripts/CNV_funestus/scripts/find_failed_samples.r --args v1.1_{sampleset} /personal/funestus/v1.1_{sampleset}/data/bampaths.csv 3 24 ~/personal/funestus/v1.1_{sampleset}/data/bampaths_failed_samples_{x}.csv > ~/personal/funestus/v1.1_{sampleset}/data/find_failed_samples_{x}.log 2>&1 &
+
+~/scripts/CNV_funestus/launchers/run_coverage_and_diagnostic_reads_vobs.sh ~/personal/funestus/v1.1_{sampleset}/data/bampaths_failed_samples_{x}.csv 30 v1.1_{sampleset}
+
+# Once no samples have failed, you can move on
+
+~/scripts/CNV_funestus/launchers/run_coverage_stats_by_species_vobs.sh v1.1_{sampleset} 
+
+~/scripts/CNV_funestus/launchers/run_HMM_vobs.sh v1.1_{sampleset}
+
+# Here you may find a line in the Ag1000G pipeline that runs the script join_species_coverage_variance_files_vobs.sh. It is not needed for funestus since there is only one species. 
+
+~/scripts/CNV_funestus/launchers/run_coverage_CNVs_vobs.sh ~/personal/funestus/v1.1_{sampleset}/data/sample_metadata_tabs.tsv v1.1_{sampleset} 
+
+~/scripts/CNV_funestus/launchers/run_modal_CNVs_vobs.sh ~/personal/funestus/v1.1_{sampleset}/data/sample_metadata_tabs.tsv v1.1_{sampleset} 
+
+~/scripts/CNV_funestus/launchers/run_target_regions_analysis_vobs.sh ~/personal/funestus/v1.1_{sampleset}/data/sample_manifest.txt ~/personal/funestus/v1.1_{sampleset}/data/sample_metadata_tabs.tsv v1.1_{sampleset} 
+
+bsub -o temp.log -e temp.error -R"select[mem>1000] rusage[mem=1000]" -M1000 ~/scripts/CNV_funestus/scripts/join_CNV_output_files_vobs.sh v1.1_{sampleset} 
+
